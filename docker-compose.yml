@@ -1,16 +1,33 @@
 services:
   master:
-    image: book-master:latest
+    image: spark-master:latest
     ports:
       - "8888:8888"
       - "8088:8088"
       - "8000:8000"
+      - "9090:8080"
+      - "7077:7077"
+      - "8888:8888"
+      - "4040:4040"
+      - "5001:5001"
     volumes:
       - ../courses:/lectures # courses is a github repo containing lecture materials
       - ../csc467data:/data
+    environment:
+      - "SPARK_LOCAL_IP=spark-master"
       
-  worker:
-    image: book-worker:latest
+  spark-worker:
+    image: spark-worker:latest
+    ports:
+      - "8081"
+    depends_on:
+      - spark-master
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_DRIVER_MEMORY=128m
+      - SPARK_EXECUTOR_MEMORY=256m
     volumes:
       - ../courses:/lectures # courses is a github repo containing lecture materials
       - ../csc467data:/data
@@ -18,3 +35,7 @@ services:
 networks:
   default:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet:  17.18.0.0/16
