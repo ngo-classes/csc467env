@@ -1,4 +1,4 @@
-FROM rockylinux:9.3-minimal
+FROM spark:3.5.2-java17-python3
 
 USER root
 
@@ -7,21 +7,22 @@ ENV PIP_ROOT_USER_ACTION=ignore
 COPY code-server/config.yaml /
 COPY start-master.sh /
 
-RUN microdnf update -y && \
-    microdnf install -y python3 python3-pip curl nano && \
-    pip install numpy pandas nltk matplotlib scikit-learn && \
+ENV SPARK_MASTER_PORT=7077
+ENV SPARK_MASTER_WEBUI_PORT=8080
+ENV SPARK_MASTER_LOG=/spark/logs
+
+RUN apt update && \
+    apt install -y curl && \
     curl -fsSL https://code-server.dev/install.sh | sh && \
     mkdir -p /root/.config/code-server/ && \
     cp /config.yaml /root/.config/code-server/config.yaml && \
-    microdnf clean all
-
-# setup Python packages
-RUN pip3 install jupyter jupyter-book && \
+    rm /config.yaml && \
+    apt clean && \
+    pip3 install jupyter jupyter-book flask && \
+    pip3 install numpy pandas nltk matplotlib scikit-learn && \
     pip3 install mkdocs-material markdown-include mkdocs-table-reader-plugin mkdocs-jupyter
 
-# 8888: jupyter
-# 8088: vscode-server
-# 8000: mkdocs serve
-EXPOSE 8888 8088 8000
+
+EXPOSE 8080 7077 6066 8888 4040 9009 5001 8088
 
 CMD ["/bin/bash", "/start-master.sh"]
