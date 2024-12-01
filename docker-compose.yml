@@ -1,5 +1,5 @@
 services:
-  master:
+  spark-master:
     image: spark-master:latest
     ports:
       - "8888:8888"
