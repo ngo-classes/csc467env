@@ -23,6 +23,6 @@ RUN apt update && \
     pip3 install mkdocs-material markdown-include mkdocs-table-reader-plugin mkdocs-jupyter
 
 
-EXPOSE 8080 7077 6066 8888 4040 9009 5001 8088
+EXPOSE 8080 7077 6066 8888 4040 9009 5001 8088 8000
 
 CMD ["/bin/bash", "/start-master.sh"]
