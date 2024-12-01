@@ -2,8 +2,8 @@
 
 set -e
 
-docker image rm book-master:latest || true
-docker image rm book-worker:latest || true
+docker image rm spark-master:latest || true
+docker image rm spark-worker:latest || true
 
-docker build -t book-master:latest ./docker/master
-docker build -t book-worker:latest ./docker/worker
+docker build -t spark-master:latest ./docker/master
+docker build -t spark-worker:latest ./docker/worker
