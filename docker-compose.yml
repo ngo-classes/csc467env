@@ -20,6 +20,7 @@ services:
     volumes:
       - ../courses:/lectures # courses is a github repo containing lecture materials
       - ./data:/data
+      - ./notebooks:/notebooks
       - ../grading-scripts:/grading-scripts
       - ../d2l:/d2l
     environment:
@@ -39,6 +40,7 @@ services:
       - "18080:8080" # spark-master webui
     volumes:
       - ./data:/data
+      - ./notebooks:/notebooks
     environment:
       - "SPARK_LOCAL_IP=spark-master"
     hostname: spark-master

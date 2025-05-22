@@ -48,6 +48,9 @@ docker compose up -d worker --scale worker=4
 
 - Access the Jupyter server via http://127.0.0.1:18888/
    
+- Go to the `notebooks` directory, open the `wordcount.ipynb` and run the entire notebook. You should see the following outcome:
+
+![](figures/wordcount.png)
 
 ### Build mkdocs server (for instructor)
 
