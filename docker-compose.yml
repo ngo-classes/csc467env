@@ -1,27 +1,60 @@
 services:
-  spark-master:
-    image: spark-master:latest
+  base:
+    build:
+      context: ./docker/base
+      tags:
+        - "csc467:base"
+    image: csc467:base
+
+  master-instructor:
+    build:
+      context: ./docker/master-instructor
+      tags:
+        - "csc467:master-instructor"
+    init: true
+    image: csc467:master-instructor
     ports:
-      - "8888:8888"
-      - "8088:8088"
-      - "8000:8000"
-      - "9090:8080"
-      - "7077:7077"
-      - "8888:8888"
-      - "4040:4040"
-      - "5001:5001"
+      - "18080:8080" # spark-master webui
+      - "18088:8088" # code-server
+      - "18888:8888" # jupyter server
     volumes:
       - ../courses:/lectures # courses is a github repo containing lecture materials
       - ../csc467data:/data
+      - ../grading-scripts:/grading-scripts
+      - ../d2l:/d2l
     environment:
       - "SPARK_LOCAL_IP=spark-master"
-      
-  spark-worker:
-    image: spark-worker:latest
+    hostname: spark-master
+    container_name: spark-master
+
+  master-student:
+    build:
+      context: ./docker/master-student
+      tags:
+        - "csc467:master-student"
+    init: true
+    image: csc467:master-student
+    ports:
+      - "18888:8888" # jupyter server
+      - "18080:8080" # spark-master webui
+    volumes:
+      - ../csc467data:/data
+    environment:
+      - "SPARK_LOCAL_IP=spark-master"
+    hostname: spark-master
+    container_name: spark-master
+
+
+  # This service will depend on either master-instructor or master-student    
+  worker:
+    build:
+      context: ./docker/worker
+      tags:
+        - "csc467:worker"
+    init: true
+    image: csc467:worker
     ports:
       - "8081"
-    depends_on:
-      - spark-master
     environment:
       - SPARK_MASTER=spark://spark-master:7077
       - SPARK_WORKER_CORES=1
@@ -29,7 +62,6 @@ services:
       - SPARK_DRIVER_MEMORY=128m
       - SPARK_EXECUTOR_MEMORY=256m
     volumes:
-      - ../courses:/lectures # courses is a github repo containing lecture materials
       - ../csc467data:/data
       
 networks:
