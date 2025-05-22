@@ -19,7 +19,7 @@ services:
       - "18888:8888" # jupyter server
     volumes:
       - ../courses:/lectures # courses is a github repo containing lecture materials
-      - ../csc467data:/data
+      - ./data:/data
       - ../grading-scripts:/grading-scripts
       - ../d2l:/d2l
     environment:
@@ -38,7 +38,7 @@ services:
       - "18888:8888" # jupyter server
       - "18080:8080" # spark-master webui
     volumes:
-      - ../csc467data:/data
+      - ./data:/data
     environment:
       - "SPARK_LOCAL_IP=spark-master"
     hostname: spark-master
@@ -62,7 +62,7 @@ services:
       - SPARK_DRIVER_MEMORY=128m
       - SPARK_EXECUTOR_MEMORY=256m
     volumes:
-      - ../csc467data:/data
+      - ./data:/data
       
 networks:
   default:
