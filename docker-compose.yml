@@ -63,8 +63,6 @@ services:
       - SPARK_WORKER_MEMORY=1G
       - SPARK_DRIVER_MEMORY=128m
       - SPARK_EXECUTOR_MEMORY=256m
-    volumes:
-      - ./data:/data
       
 networks:
   default:
