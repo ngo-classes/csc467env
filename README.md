@@ -33,6 +33,12 @@ docker compose build --no-cache master-instructor
 docker compose build --no-cache master-student
 ~~~
 
+- Finally, build `worker`:
+
+~~~
+docker compose build --no-cache worker
+~~~
+
 ### Launching the cluster
 
 - You should launch in the following order:
